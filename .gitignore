@@ -1,0 +1,66 @@
+# Python-Environment
+venv/
+my-project-env/
+multi-lang-env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# R-specific
+renv/library/
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+renc.lock
+renv
+
+# Output files (regenerated)
+outputs/
+*.html
+*.pdf
+*_cache/
+*_files/
+
+# Large data files (too big for git)
+data-raw/
+*.zip
+*.tar.gz
+*.shp
+*.dbf
+*.prj
+*.shx
+*.cpg
+
+# OS-specific
+.DS_Store
+Thumbs.db
+*~
+._*
+
+# IDE-spezifische Dateien
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Other
+.claude
