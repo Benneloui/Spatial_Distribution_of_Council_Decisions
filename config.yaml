@@ -1,0 +1,19 @@
+# =========================================
+# OParl Mini-Pipeline Konfiguration
+# =========================================
+
+# Stadt-Einstellungen
+city: "Augsburg"
+country: "Deutschland"
+
+# OParl API Endpoint
+oparl_api: "https://www.augsburg.sitzung-online.de/public/oparl/system"
+
+# Limits für Demo
+max_papers: 10          # Maximal 10 Papers herunterladen
+max_pages_per_pdf: 10   # Nur PDFs mit max. 10 Seiten
+max_streets: 10000        # Top 10000 Straßen für Gazetteer
+
+# Output-Verzeichnisse
+gazetteer: "data/gazetteer"
+pdfs: "data/pdfs"
