@@ -10,7 +10,7 @@ output:
     code_folding: hide
     theme: flatly
     highlight: tango
-    html_document: /Users/benedikt.pilgram/Code/Geomodelierung/vignettes/report_bp.html
+    html_document: /Users/benedikt.pilgram/Code/Geomodelierung/docs/report_bp.html
 bibliography: references.bib
 ---
 

@@ -20,7 +20,7 @@ outputs/
 *_files/
 
 # Allow tracked report artifact
-!vignettes/report.html
+!docs/report.html
 
 
 # OS-specific

@@ -4,7 +4,7 @@ Pipeline to fetch Augsburg council papers (OParl), extract location mentions via
 
 ## Key Output
 
-- `vignettes/report.html`: rendered R Markdown report with the interactive Leaflet map (filtered to ≥85% match score). Open directly in a browser.
+- `docs/report.html`: rendered R Markdown report with the interactive Leaflet map (filtered to ≥85% match score). Open directly in a browser.
 
 ## Quickstart (R)
 
@@ -22,7 +22,7 @@ Rscript analysis/run_all.r
 
 1. View results:
 	- Interactive map: `figures/interactive_map.html`
-	- Full report: `vignettes/report.html`
+	- Full report: `docs/report.html`
 
 ## Inputs & Config
 
@@ -39,6 +39,6 @@ Rscript analysis/run_all.r
 
 ## Notes
 
-- Rendering `vignettes/report.Rmd` in RStudio also produces `vignettes/report.html`
+- Rendering `docs/report.Rmd` in RStudio also produces `docs/report.html`
 - Large data files and other generated HTML/PDFs remain ignored per `.gitignore`.
 
