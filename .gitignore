@@ -13,14 +13,11 @@ geomodelierung.Rproj
 
 # Output files (regenerated)
 outputs/
-*.html
 *.pdf
 *.csv
 *_cache/
 *_files/
 
-# Allow tracked report artifact
-!docs/report.html
 
 
 # OS-specific

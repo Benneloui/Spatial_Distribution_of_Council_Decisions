@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Benedikt Pilgram">
+<meta name="dcterms.date" content="2025-12-12">
+<meta name="keywords" content="OParl, Augsburg, Data Science, Benedikt Pilgram, RIS, Mapping Politics">
+<meta name="description" content="Geographical analysis of the City of Augsburg Council Information System via OParl API by Benedikt Pilgram">
+
+<title>Spatial Distribution of Council Decisions</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f93c2b1f3f0577f377aefa4848a86a36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-binding-2.2.2/leaflet.js"></script>
+<script src="site_libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+<script src="site_libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
+<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.css" rel="stylesheet">
+<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.Default.css" rel="stylesheet">
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.js"></script>
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.freezable.js"></script>
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.layersupport.js"></script>
+
+
+<meta property="og:title" content="Spatial Distribution of Council Decisions">
+<meta property="og:description" content="Geographical analysis of the City of Augsburg Council Information System via OParl API by Benedikt Pilgram">
+<meta property="og:site_name" content="Spatial Distribution of Council Decisions">
+<meta name="twitter:title" content="Spatial Distribution of Council Decisions">
+<meta name="twitter:description" content="Geographical analysis of the City of Augsburg Council Information System via OParl API by Benedikt Pilgram">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">1. Introduction</a>
+  <ul class="collapse">
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">1.1 Background</a></li>
+  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question">1.2 Research Question</a></li>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">1.3 Objectives</a></li>
+  </ul></li>
+  <li><a href="#study-area" id="toc-study-area" class="nav-link" data-scroll-target="#study-area">2. Study Area</a>
+  <ul class="collapse">
+  <li><a href="#geographic-scope" id="toc-geographic-scope" class="nav-link" data-scroll-target="#geographic-scope">Geographic Scope</a></li>
+  </ul></li>
+  <li><a href="#data-and-methods" id="toc-data-and-methods" class="nav-link" data-scroll-target="#data-and-methods">3. Data and Methods</a>
+  <ul class="collapse">
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">3.1 Data Sources</a>
+  <ul class="collapse">
+  <li><a href="#oparl-council-records" id="toc-oparl-council-records" class="nav-link" data-scroll-target="#oparl-council-records">OParl Council Records</a></li>
+  <li><a href="#openstreetmap-street-data" id="toc-openstreetmap-street-data" class="nav-link" data-scroll-target="#openstreetmap-street-data">OpenStreetMap Street Data</a></li>
+  <li><a href="#pdf-text-extraction" id="toc-pdf-text-extraction" class="nav-link" data-scroll-target="#pdf-text-extraction">PDF Text Extraction</a></li>
+  </ul></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">3.2 Methods</a>
+  <ul class="collapse">
+  <li><a href="#gazetteer-creation-script-01_gazetteer.r" id="toc-gazetteer-creation-script-01_gazetteer.r" class="nav-link" data-scroll-target="#gazetteer-creation-script-01_gazetteer.r">3.2.1 Gazetteer Creation (Script: <code>01_gazetteer.R</code>)</a></li>
+  <li><a href="#pdf-download-and-metadata-script-02_fetch_papers.r" id="toc-pdf-download-and-metadata-script-02_fetch_papers.r" class="nav-link" data-scroll-target="#pdf-download-and-metadata-script-02_fetch_papers.r">3.2.2 PDF Download and Metadata (Script: <code>02_fetch_papers.R</code>)</a></li>
+  <li><a href="#location-extraction-script-03_extract_locations.r" id="toc-location-extraction-script-03_extract_locations.r" class="nav-link" data-scroll-target="#location-extraction-script-03_extract_locations.r">3.2.3 Location Extraction (Script: <code>03_extract_locations.R</code>)</a></li>
+  <li><a href="#visualization-script-04_visualize.r" id="toc-visualization-script-04_visualize.r" class="nav-link" data-scroll-target="#visualization-script-04_visualize.r">3.2.4 Visualization (Script: <code>04_visualize.R</code>)</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">4. Results</a>
+  <ul class="collapse">
+  <li><a href="#gazetteer-statistics" id="toc-gazetteer-statistics" class="nav-link" data-scroll-target="#gazetteer-statistics">4.1 Gazetteer Statistics</a></li>
+  <li><a href="#pdf-download-results" id="toc-pdf-download-results" class="nav-link" data-scroll-target="#pdf-download-results">4.2 PDF Download Results</a></li>
+  <li><a href="#location-extraction-results" id="toc-location-extraction-results" class="nav-link" data-scroll-target="#location-extraction-results">4.3 Location Extraction Results</a></li>
+  <li><a href="#interactive-map" id="toc-interactive-map" class="nav-link" data-scroll-target="#interactive-map">4.4 Interactive Map</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">5. Discussion</a>
+  <ul class="collapse">
+  <li><a href="#methodology-strengths" id="toc-methodology-strengths" class="nav-link" data-scroll-target="#methodology-strengths">5.1 Methodology Strengths</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">5.2 Limitations</a></li>
+  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">5.3 Interpretation</a></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">5.4 Future Work</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">6. Conclusion</a></li>
+  <li><a href="#technical-appendix" id="toc-technical-appendix" class="nav-link" data-scroll-target="#technical-appendix">7. Technical Appendix</a>
+  <ul class="collapse">
+  <li><a href="#system-requirements" id="toc-system-requirements" class="nav-link" data-scroll-target="#system-requirements">7.1 System Requirements</a></li>
+  <li><a href="#configuration-config.yaml" id="toc-configuration-config.yaml" class="nav-link" data-scroll-target="#configuration-config.yaml">7.2 Configuration (config.yaml)</a></li>
+  <li><a href="#running-the-pipeline" id="toc-running-the-pipeline" class="nav-link" data-scroll-target="#running-the-pipeline">7.3 Running the Pipeline</a></li>
+  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files">7.4 Output Files</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Spatial Distribution of Council Decisions</h1>
+</div>
+
+<div>
+  <div class="description">
+    Geographical analysis of the City of Augsburg Council Information System via OParl API by Benedikt Pilgram
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Benedikt Pilgram </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 12, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>OParl, Augsburg, Data Science, Benedikt Pilgram, RIS, Mapping Politics</p>
+  </div>
+</div>
+
+</header>
+
+
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<p>This project demonstrates the spatial distribution of council decisions in Augsburg, Germany. By extracting location references from council papers (OParl data) and matching them against a street gazetteer, we identify where council are geographically focused. The study combines natural language processing (fuzzy string matching) with interactive mapping to visualize the political negotiation of urban space. K</p>
+</section>
+<section id="introduction" class="level1">
+<h1>1. Introduction</h1>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">1.1 Background</h2>
+<p>Municipal councils shape urban development through formal decisions documented in official records. Understanding where political attention is concentrated provides insights into urban governance priorities and spatial inequalities.</p>
+<p>In Augsburg (population ~295,000), the city council approves development plans (Bebauungspläne), building permits, and infrastructure projects. These are documented in the OParl API, a standardized platform for publishing municipal legislative information.</p>
+</section>
+<section id="research-question" class="level2">
+<h2 class="anchored" data-anchor-id="research-question">1.2 Research Question</h2>
+<blockquote class="blockquote">
+<p><strong>“<strong>What geographically relevant information, such as development plans and infrastructure projects in Augsburg, was discussed politically in the council minutes?</strong>”</strong></p>
+</blockquote>
+</section>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">1.3 Objectives</h2>
+<ol type="1">
+<li>Develop a reproducible pipeline to extract location references from council papers</li>
+<li>Create a street gazetteer for Augsburg with geocoded coordinates</li>
+<li>Match council papers to geographic locations using fuzzy string matching</li>
+<li>Visualize results on an interactive map with temporal metadata</li>
+</ol>
+</section>
+</section>
+<section id="study-area" class="level1">
+<h1>2. Study Area</h1>
+<p><strong>Augsburg, Bavaria, Germany</strong> - Population: ~295,000 (city proper) - Metropolitan area: ~800,000 - Historical context: Roman city (2,000 years), medieval trading hub, industrial heritage - Administrative structure: City Council (Stadtrat) with 60 members - Data source: ALLRIS OParl API (<a href="https://augsburg.de/oparl/v1.0" class="uri">https://augsburg.de/oparl/v1.0</a>)</p>
+<section id="geographic-scope" class="level3">
+<h3 class="anchored" data-anchor-id="geographic-scope">Geographic Scope</h3>
+<p>Analysis limited to streets and locations within Augsburg city boundaries. A gazetteer of street names and locaitons was extracted from OpenStreetMap (Overpass API) for matching against council papers.</p>
+</section>
+</section>
+<section id="data-and-methods" class="level1">
+<h1>3. Data and Methods</h1>
+<section id="data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources">3.1 Data Sources</h2>
+<section id="oparl-council-records" class="level3">
+<h3 class="anchored" data-anchor-id="oparl-council-records">OParl Council Records</h3>
+<ul>
+<li><strong>Source</strong>: ALLRIS OParl API (Augsburg municipal system)</li>
+<li><strong>Content</strong>: Council papers (Drucksachen), agendas, decisions</li>
+<li><strong>Format</strong>: JSON API responses with full-text PDF access</li>
+<li><strong>Coverage</strong>: sample limited to 10 papers for this analysis</li>
+<li><strong>Metadata</strong>: Paper ID, title, date, main file (PDF), URL references</li>
+</ul>
+</section>
+<section id="openstreetmap-street-data" class="level3">
+<h3 class="anchored" data-anchor-id="openstreetmap-street-data">OpenStreetMap Street Data</h3>
+<ul>
+<li><strong>Source</strong>: Overpass API query for ways tagged with <code>["highway"]["name"]</code> within Augsburg bounding box</li>
+<li><strong>Processing</strong>: 12,641 street segments extracted → 3,120 unique street names after deduplication</li>
+<li><strong>Data quality</strong>: Coordinates taken from segment midpoints (representative, not exact boundaries)</li>
+</ul>
+</section>
+<section id="pdf-text-extraction" class="level3">
+<h3 class="anchored" data-anchor-id="pdf-text-extraction">PDF Text Extraction</h3>
+<ul>
+<li><strong>Tool</strong>: <code>pdftools</code> R package (wrapper around pdftotext)</li>
+<li><strong>Filter</strong>: PDFs ≤10 pages (to avoid overly large documents)</li>
+<li><strong>Sample</strong>: 8 papers downloaded and processed</li>
+</ul>
+</section>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">3.2 Methods</h2>
+<section id="gazetteer-creation-script-01_gazetteer.r" class="level3">
+<h3 class="anchored" data-anchor-id="gazetteer-creation-script-01_gazetteer.r">3.2.1 Gazetteer Creation (Script: <code>01_gazetteer.R</code>)</h3>
+<p><strong>Step 1: Bounding Box Retrieval</strong> - Query Nominatim API with city name and country - Extract bounding box coordinates (south, north, west, east)</p>
+<p><strong>Step 2: Street Data Acquisition</strong> - Query Overpass API for all highway features with names within bounding box - OverpassQL query: <code>way["highway"]["name"](bbox)</code> - Response format: GeoJSON with street names and center coordinates</p>
+<p><strong>Step 3: Deduplication</strong> - Group by street name, retain first occurrence - Remove duplicates while preserving geographic coordinates - Sort alphabetically for consistency</p>
+<p><strong>Step 4: Output</strong> - CSV with columns: <code>street_name</code>, <code>latitude</code>, <code>longitude</code> - Used as reference database for subsequent location matching</p>
+</section>
+<section id="pdf-download-and-metadata-script-02_fetch_papers.r" class="level3">
+<h3 class="anchored" data-anchor-id="pdf-download-and-metadata-script-02_fetch_papers.r">3.2.2 PDF Download and Metadata (Script: <code>02_fetch_papers.R</code>)</h3>
+<p><strong>Step 1: OParl Navigation</strong> - Fetch System → Body → Paper endpoints - Extract paper metadata: title, date, main file URL</p>
+<p><strong>Step 2: PDF Download</strong> - Iterate through papers, fetch mainFile via HTTP - Check file size constraints (max 10 pages via pdf_info) - Store in <code>data/pdfs/</code> with paper ID as filename</p>
+<p><strong>Step 3: Metadata Logging</strong> - Record: <code>paper_id</code>, <code>paper_title</code>, <code>paper_date</code>, <code>pdf_url</code>, <code>pdf_path</code>, <code>page_count</code> - Export to CSV for downstream processing</p>
+</section>
+<section id="location-extraction-script-03_extract_locations.r" class="level3">
+<h3 class="anchored" data-anchor-id="location-extraction-script-03_extract_locations.r">3.2.3 Location Extraction (Script: <code>03_extract_locations.R</code>)</h3>
+<p><strong>Step 1: Text Extraction</strong> - Use <code>pdftools::pdf_text()</code> to extract full text from each PDF - Concatenate all pages into single string</p>
+<p><strong>Step 2: Fuzzy String Matching</strong> - Split extracted text into words - For each street in gazetteer, compute Levenshtein distance to text words - Threshold: distance ≤ 0.2 (80% similarity match) - Captures variations: “Maximilianstr.” → “Maximilianstraße”</p>
+<p><strong>Step 3: Match Quality Assessment</strong> - Calculate match score: <code>1 - (distance / street_name_length)</code> - Retain only matches with score ≥ 0.8 - Log all matches with metadata</p>
+<p><strong>Step 4: Output</strong> - CSV: <code>paper_id</code>, <code>paper_title</code>, <code>paper_date</code>, <code>street_name</code>, <code>latitude</code>, <code>longitude</code>, <code>match_score</code>, <code>pdf_url</code></p>
+</section>
+<section id="visualization-script-04_visualize.r" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-script-04_visualize.r">3.2.4 Visualization (Script: <code>04_visualize.R</code>)</h3>
+<p><strong>Step 1: Map Creation</strong> - Use Leaflet JS library (via R htmlwidgets) - Base layer: OpenStreetMap + CartoDB Dark/Light options - Center: Median of all extracted coordinates</p>
+<p><strong>Step 2: Markers and Clusters</strong> - Circle markers for each location match - Size: Fixed 8px radius - Color: Red (#f44336) with 0.7 opacity - Clustering: Markercluster plugin (maxClusterRadius=50)</p>
+<p><strong>Step 3: Popups</strong> - Interactive popups with: - Street name - Paper title (truncated to 100 chars) - Paper date - Match score (85-100%) - Clickable link to PDF</p>
+<p><strong>Step 4: Output</strong> - HTML file: <code>figures/interactive_map.html</code> - Self-contained or with assets folder (depending on pandoc availability) - Browser-compatible: all modern browsers supported</p>
+</section>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>4. Results</h1>
+<section id="gazetteer-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="gazetteer-statistics">4.1 Gazetteer Statistics</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example output from 01_gazetteer.R</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ✓ Gefunden: 12,641 Straßensegmente</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ✓ Verarbeitet: 3,120 eindeutige Straßen</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview (first 5 streets):</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   street_name            latitude  longitude</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 Aachener Straße       48.3521  10.8951</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2 Ackermann Straße      48.3634  10.8723</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3 Äussere Uferstraße    48.3701  10.8845</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 Agnesstraße           48.3578  10.9034</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 Agneswalder Straße    48.3612  10.8876</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Findings:</strong> - 3,120 unique street names across Augsburg - Average 4.0 segments per street (12,641 / 3,120) - Geographic coverage: entire city area</p>
+</section>
+<section id="pdf-download-results" class="level2">
+<h2 class="anchored" data-anchor-id="pdf-download-results">4.2 PDF Download Results</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example output from 02_fetch_papers.R</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ✓ Heruntergeladen: 8 PDFs</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># → Übersprungen: 2</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Durchschnittliche Seitenzahl: 2.1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Quality Control:</strong> - Filter threshold: 10 pages maximum - Skipped papers: 41-page development plan (too large) - Downloaded papers: 1-3 pages (typical council papers)</p>
+</section>
+<section id="location-extraction-results" class="level2">
+<h2 class="anchored" data-anchor-id="location-extraction-results">4.3 Location Extraction Results</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example output from 03_extract_locations.R</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Papers processed: 8</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Locations found: 12</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Unique streets mentioned: 8</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Average match score: 0.92</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p><strong>Match Examples:</strong> - “Fuggerstraße” in paper title + document → 100% match - “Maximilianstr.” in text → fuzzy match to “Maximilianstraße” (0.88) - False positives prevented by threshold (e.g., “Straße” alone rejected). False positives are text passages that would be incorrectly recognised as street names (e.g.&nbsp;the general word ‘street’ or poorly matching spelling variants). They are filtered in <code>03_extract_locations.r</code> using the fuzzy matching score: Levenshtein distance → match_score = 1 - distance / nchar(street_name). Only matches with a score ≥ threshold value (currently ~0.85 in the script; and also later on, could be a second filter for ≥0.85 on the map) are accepted. Anything below this is discarded and does not appear in data/extracted_locations.csv or on the map.</p>
+</section>
+<section id="interactive-map" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-map">4.4 Interactive Map</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lade die extrahierten Locations</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"../data/extracted_locations.csv"</span>)) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  locations <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/extracted_locations.csv"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">fileEncoding =</span> <span class="st">"UTF-8"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter: Nur Matches ≥ 85%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  min_match_score <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  locations_filtered <span class="ot">&lt;-</span> locations[locations<span class="sc">$</span>match_score <span class="sc">&gt;=</span> min_match_score, ]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(locations_filtered) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Center berechnen</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    center_lat <span class="ot">&lt;-</span> <span class="fu">median</span>(locations_filtered<span class="sc">$</span>latitude, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    center_lon <span class="ot">&lt;-</span> <span class="fu">median</span>(locations_filtered<span class="sc">$</span>longitude, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Popup erstellen</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    locations_filtered <span class="ot">&lt;-</span> locations_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">popup_text =</span> <span class="fu">sprintf</span>(</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>          <span class="st">"&lt;div style='font-family: Arial, sans-serif; max-width: 300px;'&gt;</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;h4 style='margin: 0 0 10px 0; color: #d32f2f;'&gt;%s&lt;/h4&gt;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Paper:&lt;/strong&gt;&lt;br&gt;%s&lt;/p&gt;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Datum:&lt;/strong&gt; %s&lt;/p&gt;</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Match:&lt;/strong&gt; %.0f%%&lt;/p&gt;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;a href='%s' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'&gt;</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="st">              📄 PDF öffnen</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;/a&gt;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="st">          &lt;/div&gt;"</span>,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>          street_name,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>          <span class="fu">substr</span>(paper_title, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>          <span class="fu">ifelse</span>(<span class="fu">is.na</span>(paper_date), <span class="st">"k.A."</span>, paper_date),</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>          match_score <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>          pdf_url</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Leaflet Karte</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">leaflet</span>(locations_filtered) <span class="sc">%&gt;%</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">addTiles</span>(<span class="at">group =</span> <span class="st">"OpenStreetMap"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>      <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>CartoDB.Positron, <span class="at">group =</span> <span class="st">"Hell"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>      <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>CartoDB.DarkMatter, <span class="at">group =</span> <span class="st">"Dunkel"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>      <span class="fu">setView</span>(<span class="at">lng =</span> center_lon, <span class="at">lat =</span> center_lat, <span class="at">zoom =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">addCircleMarkers</span>(</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">lng =</span> <span class="sc">~</span>longitude,</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">lat =</span> <span class="sc">~</span>latitude,</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">popup =</span> <span class="sc">~</span>popup_text,</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">radius =</span> <span class="dv">8</span>,</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#d32f2f"</span>,</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">fillColor =</span> <span class="st">"#f44336"</span>,</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">fillOpacity =</span> <span class="fl">0.7</span>,</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">stroke =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">weight =</span> <span class="dv">2</span>,</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">clusterOptions =</span> <span class="fu">markerClusterOptions</span>(</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>          <span class="at">maxClusterRadius =</span> <span class="dv">50</span>,</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>          <span class="at">spiderfyOnMaxZoom =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>      <span class="fu">addLayersControl</span>(</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">baseGroups =</span> <span class="fu">c</span>(<span class="st">"OpenStreetMap"</span>, <span class="st">"Hell"</span>, <span class="st">"Dunkel"</span>),</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>      <span class="fu">addControl</span>(</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">html =</span> <span class="fu">sprintf</span>(</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>          <span class="st">"&lt;div style='background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);'&gt;</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;h3 style='margin: 0 0 5px 0;'&gt;Augsburg - Policy Focus Areas&lt;/h3&gt;</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;p style='margin: 0; font-size: 14px;'&gt;%d Locations aus %d Papers&lt;br&gt;(Match ≥ 85%%)&lt;/p&gt;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="st">          &lt;/div&gt;"</span>,</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>          <span class="fu">nrow</span>(locations_filtered),</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>          <span class="fu">length</span>(<span class="fu">unique</span>(locations_filtered<span class="sc">$</span>paper_id))</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">position =</span> <span class="st">"topright"</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"**Hinweis**: Keine Locations mit ≥85% Match gefunden. Bitte 03_extract_locations.R ausführen."</span>)</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"**Hinweis**: Locations-Datei nicht gefunden. Bitte 03_extract_locations.R ausführen."</span>)</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-f4335e4c9fef1b5cf1c9" style="width:100%;height:433px;"></div>
+<script type="application/json" data-for="htmlwidget-f4335e4c9fef1b5cf1c9">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,"OpenStreetMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["CartoDB.Positron",null,"Hell",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["CartoDB.DarkMatter",null,"Dunkel",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[48.3620464,48.3546375,48.3608804,48.3905676,48.3191865,48.3546375,48.3671323,48.3665915,48.3683403,48.3680176,48.3658423],[10.8639028,10.7856711,10.9490393,10.8778849,10.9029318,10.7856711,10.8984422,10.8944465,10.8982036,10.9186553,10.8886956],8,null,null,{"interactive":true,"className":"","stroke":true,"color":"#d32f2f","weight":2,"opacity":0.5,"fill":true,"fillColor":"#f44336","fillOpacity":0.7},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false,"maxClusterRadius":50},null,["<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Bürgermeister-Bohl-Straße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Rathausplatz<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Waxensteinstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Bürgermeister-Bunk-Straße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 88%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Wallensteinstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 88%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Rathausplatz<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Maximilianstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 94%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Königsplatz<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 91%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Maximilienstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 88%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Glaspalast<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Anfrage Fraktion Bürgerliche Mitte: Vermeidung von Namensverwechslungen bei der geplanten Umbenennun<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060426&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Hauptbahnhof<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Antrag der SPD-Stadtratsfraktion vom 09.12.2025: Änderungsantrag zur Fortschreibung des Nahverkehrsp<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060817&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[["OpenStreetMap","Hell","Dunkel"],[],{"collapsed":false,"autoZIndex":true,"position":"topright"}]},{"method":"addControl","args":["<div style='background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);'>\n            <h3 style='margin: 0 0 5px 0;'>Augsburg - Policy Focus Areas<\/h3>\n            <p style='margin: 0; font-size: 14px;'>11 Locations aus 4 Papers<br>(Match ≥ 85%)<\/p>\n          <\/div>","topright",null,"info legend"]}],"setView":[[48.3658423,10.8944465],13,[]],"limits":{"lat":[48.3191865,48.3905676],"lng":[10.7856711,10.9490393]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p><strong>Karteninteraktion:</strong> - <strong>Zoomen</strong>: Scroll oder +/- Buttons - <strong>Verschieben</strong>: Klick &amp; Drag - <strong>Cluster</strong>: Klick auf Cluster zum Aufteilen - <strong>Layer</strong>: Wechsel zwischen OpenStreetMap, Hell, Dunkel - <strong>Popups</strong>: Klick auf Marker für Details und PDF-Link</p>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>5. Discussion</h1>
+<section id="methodology-strengths" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-strengths">5.1 Methodology Strengths</h2>
+<ol type="1">
+<li><strong>Reproducibility</strong>: All steps documented and automated via scripts</li>
+<li><strong>Transparency</strong>: Fuzzy matching parameters explicit and tunable</li>
+<li><strong>Data availability</strong>: OParl (partially) and OpenStreetMap are public, reusable for other cities</li>
+<li><strong>Scalability</strong>: Theoretically scalable for hundreds of papers</li>
+</ol>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">5.2 Limitations</h2>
+<ol type="1">
+<li><strong>PDF text quality</strong>: Scanned PDFs without OCR will fail (mitigation: OCR not yet implemented)</li>
+<li><strong>Fuzzy matching and Gazetteer</strong>: Misses location references. And adds irrelevant information. Better fine-tuning required.</li>
+<li><strong>Size and clarity</strong>: This pilot uses only 8 papers; full analysis 100+ for statistical power come with compromises and considerations for the application. Adjustment of the layout, e.g.&nbsp;drop-down menu.</li>
+</ol>
+</section>
+<section id="interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation">5.3 Interpretation</h2>
+<p>Due to the existing challenges, it is difficult to draw a final conclusion. Focusing on meta data together with scaling could be one option. However, thanks to technological advances, working with political data at the local level certainly holds potential for human geography, for example in fields such as urban development.</p>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">5.4 Future Work</h2>
+<p>A few ideas and examples: <strong>Scale up</strong>: Process all 2,000+ available papers, <strong>Temporal analysis</strong>: Map locations over time (heatmaps, animations), <strong>OCR integration</strong>: Handle scanned PDFs, <strong>Network analysis</strong>: Connect related papers and locations, <strong>Comparative study</strong>: Replicate methodology in other German cities, <strong>Policy outcomes</strong>: Link council discussions to actual development outcomes and <strong>NLP enhancement</strong>: Use named entity recognition (NER) instead of fuzzy matching.</p>
+<p>I see the greatest potential in the connection with Linked Open Data, both for scientific purposes and for the benefit of citizens. Keywords here are RFG and GeoSPARQL.&nbsp;</p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>6. Conclusion</h1>
+<p>This study demonstrates a practical pipeline for extracting and visualizing geographic information embedded in municipal council documents. By combining OParl APIs, OpenStreetMap data, and fuzzy string matching, we create a reproducible workflow for understanding spatial dimensions of urban governance.</p>
+<p>The resulting interactive map could provide city planners, researchers, and citizens with a novel tool for analyzing where and when policy discussions occur in the future. While this pilot analysis is limited in scope, the methodology is scalable and adaptable to other municipalities.</p>
+<p><strong>Key takeaway</strong>: Making spatial information in council records visible enables better understanding of political priorities, equity in resource allocation, and patterns in urban development discourse.</p>
+<hr>
+</section>
+<section id="technical-appendix" class="level1">
+<h1>7. Technical Appendix</h1>
+<section id="system-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="system-requirements">7.1 System Requirements</h2>
+<ul>
+<li><strong>R</strong> ≥ 4.0</li>
+<li><strong>Packages</strong>: httr, jsonlite, dplyr, pdftools, yaml, leaflet, htmlwidgets, stringdist</li>
+<li><strong>External tools</strong>: Pandoc (optional, for selfcontained HTML output)</li>
+<li><strong>OS</strong>: macOS, Linux, Windows</li>
+</ul>
+</section>
+<section id="configuration-config.yaml" class="level2">
+<h2 class="anchored" data-anchor-id="configuration-config.yaml">7.2 Configuration (config.yaml)</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># City information</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">city</span><span class="kw">:</span><span class="at"> Augsburg</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">country</span><span class="kw">:</span><span class="at"> Deutschland</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Gazetteer settings</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max_streets</span><span class="kw">:</span><span class="at"> </span><span class="dv">10000</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># OParl API</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">oparl_api</span><span class="kw">:</span><span class="at"> </span><span class="st">"https://augsburg.de/oparl/v1.0"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Paper download limits</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">max_papers</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">max_pages_per_pdf</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="running-the-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="running-the-pipeline">7.3 Running the Pipeline</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 1: From RStudio (Open geomodelierung.Rproj first)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span><span class="er">(</span><span class="st">"analysis/run_all.r"</span><span class="ex">,</span> encoding = <span class="st">"UTF-8"</span><span class="kw">)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 2: From terminal</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> analysis/run_all.r</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 3: Individual scripts</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/01_gazetteer.r</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/02_fetch_papers.r</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/03_extract_locations.r</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/04_visualize.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="output-files" class="level2">
+<h2 class="anchored" data-anchor-id="output-files">7.4 Output Files</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 44%">
+<col style="width: 55%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>data/gazetteer/streets.csv</code></td>
+<td>Augsburg street names with coordinates</td>
+</tr>
+<tr class="even">
+<td><code>data/pdfs/*.pdf</code></td>
+<td>Downloaded council papers</td>
+</tr>
+<tr class="odd">
+<td><code>data/papers_metadata.csv</code></td>
+<td>Paper metadata and download info</td>
+</tr>
+<tr class="even">
+<td><code>data/extracted_locations.csv</code></td>
+<td>Matched locations with scores</td>
+</tr>
+<tr class="odd">
+<td><code>figures/interactive_map.html</code></td>
+<td>Final visualization</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<ul>
+<li><p>OParl Standard: <a href="https://oparl.org/" class="uri">https://oparl.org/</a></p></li>
+<li><p>OpenStreetMap: <a href="https://www.openstreetmap.org/" class="uri">https://www.openstreetmap.org/</a></p></li>
+<li><p>Overpass API: <a href="https://overpass-api.de/" class="uri">https://overpass-api.de/</a></p></li>
+<li><p>Leaflet JS: <a href="https://leafletjs.com/" class="uri">https://leafletjs.com/</a></p></li>
+<li><p>R htmlwidgets: <a href="https://www.htmlwidgets.org/" class="uri">https://www.htmlwidgets.org/</a></p></li>
+<li><p>Fuzzy String Matching: Levenshtein, V. (1966). “Binary codes capable of correcting deletions, insertions, and reversals”</p></li>
+<li><p><span class="citation" data-cites="birghan2019">(<a href="#ref-birghan2019" role="doc-biblioref">Birghan et al. 2019</a>)</span></p></li>
+</ul>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-birghan2019" class="csl-entry" role="listitem">
+Birghan, Fabian, Robert Hettenhausen, Christine Meschede, and Tobias Siebenlist. 2019. <span>“Informing Citizens via Council Information Systems.”</span> <em>Proceedings of the 20th Annual International Conference on Digital Government Research</em>, June, 280–86. <a href="https://doi.org/10.1145/3325112.3325220">https://doi.org/10.1145/3325112.3325220</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/benneloui\.github\.io\/Spatial_Distribution_of_Council_Decisions\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
