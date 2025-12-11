@@ -3,7 +3,7 @@
 Pipeline to fetch Augsburg council papers (OParl), extract location mentions via fuzzy matching, and visualize them on an interactive map.
 
 ## Key Output
-  https://benneloui.github.io/Spatial_Distribution_of_Council_Decisions/publication.html
+  https://benneloui.github.io/Spatial_Distribution_of_Council_Decisions/index.html
 
 ## Quickstart (R)
 

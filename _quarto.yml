@@ -1,0 +1,11 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Spatial Distribution of Council Decisions"
+  site-url: "https://benneloui.github.io/Spatial_Distribution_of_Council_Decisions/index.html"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home

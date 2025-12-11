@@ -26,3 +26,7 @@ Thumbs.db
 *~
 ._*
 
+# Quarto
+index.qmd
+/.quarto/
+**/*.quarto_ipynb

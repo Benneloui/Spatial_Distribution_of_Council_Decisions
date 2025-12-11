@@ -1,126 +1,126 @@
 [
   {
-    "objectID": "publication.html",
-    "href": "publication.html",
+    "objectID": "index.html",
+    "href": "index.html",
     "title": "Spatial Distribution of Council Decisions",
     "section": "",
     "text": "This project demonstrates the spatial distribution of council decisions in Augsburg, Germany. By extracting location references from council papers (OParl data) and matching them against a street gazetteer, we identify where council are geographically focused. The study combines natural language processing (fuzzy string matching) with interactive mapping to visualize the political negotiation of urban space. K"
   },
   {
-    "objectID": "publication.html#background",
-    "href": "publication.html#background",
+    "objectID": "index.html#background",
+    "href": "index.html#background",
     "title": "Spatial Distribution of Council Decisions",
     "section": "1.1 Background",
     "text": "1.1 Background\nMunicipal councils shape urban development through formal decisions documented in official records. Understanding where political attention is concentrated provides insights into urban governance priorities and spatial inequalities.\nIn Augsburg (population ~295,000), the city council approves development plans (Bebauungspläne), building permits, and infrastructure projects. These are documented in the OParl API, a standardized platform for publishing municipal legislative information."
   },
   {
-    "objectID": "publication.html#research-question",
-    "href": "publication.html#research-question",
+    "objectID": "index.html#research-question",
+    "href": "index.html#research-question",
     "title": "Spatial Distribution of Council Decisions",
     "section": "1.2 Research Question",
     "text": "1.2 Research Question\n\n“What geographically relevant information, such as development plans and infrastructure projects in Augsburg, was discussed politically in the council minutes?”"
   },
   {
-    "objectID": "publication.html#objectives",
-    "href": "publication.html#objectives",
+    "objectID": "index.html#objectives",
+    "href": "index.html#objectives",
     "title": "Spatial Distribution of Council Decisions",
     "section": "1.3 Objectives",
     "text": "1.3 Objectives\n\nDevelop a reproducible pipeline to extract location references from council papers\nCreate a street gazetteer for Augsburg with geocoded coordinates\nMatch council papers to geographic locations using fuzzy string matching\nVisualize results on an interactive map with temporal metadata"
   },
   {
-    "objectID": "publication.html#data-sources",
-    "href": "publication.html#data-sources",
+    "objectID": "index.html#data-sources",
+    "href": "index.html#data-sources",
     "title": "Spatial Distribution of Council Decisions",
     "section": "3.1 Data Sources",
     "text": "3.1 Data Sources\n\nOParl Council Records\n\nSource: ALLRIS OParl API (Augsburg municipal system)\nContent: Council papers (Drucksachen), agendas, decisions\nFormat: JSON API responses with full-text PDF access\nCoverage: sample limited to 10 papers for this analysis\nMetadata: Paper ID, title, date, main file (PDF), URL references\n\n\n\nOpenStreetMap Street Data\n\nSource: Overpass API query for ways tagged with [\"highway\"][\"name\"] within Augsburg bounding box\nProcessing: 12,641 street segments extracted → 3,120 unique street names after deduplication\nData quality: Coordinates taken from segment midpoints (representative, not exact boundaries)\n\n\n\nPDF Text Extraction\n\nTool: pdftools R package (wrapper around pdftotext)\nFilter: PDFs ≤10 pages (to avoid overly large documents)\nSample: 8 papers downloaded and processed"
   },
   {
-    "objectID": "publication.html#methods",
-    "href": "publication.html#methods",
+    "objectID": "index.html#methods",
+    "href": "index.html#methods",
     "title": "Spatial Distribution of Council Decisions",
     "section": "3.2 Methods",
     "text": "3.2 Methods\n\n3.2.1 Gazetteer Creation (Script: 01_gazetteer.R)\nStep 1: Bounding Box Retrieval - Query Nominatim API with city name and country - Extract bounding box coordinates (south, north, west, east)\nStep 2: Street Data Acquisition - Query Overpass API for all highway features with names within bounding box - OverpassQL query: way[\"highway\"][\"name\"](bbox) - Response format: GeoJSON with street names and center coordinates\nStep 3: Deduplication - Group by street name, retain first occurrence - Remove duplicates while preserving geographic coordinates - Sort alphabetically for consistency\nStep 4: Output - CSV with columns: street_name, latitude, longitude - Used as reference database for subsequent location matching\n\n\n3.2.2 PDF Download and Metadata (Script: 02_fetch_papers.R)\nStep 1: OParl Navigation - Fetch System → Body → Paper endpoints - Extract paper metadata: title, date, main file URL\nStep 2: PDF Download - Iterate through papers, fetch mainFile via HTTP - Check file size constraints (max 10 pages via pdf_info) - Store in data/pdfs/ with paper ID as filename\nStep 3: Metadata Logging - Record: paper_id, paper_title, paper_date, pdf_url, pdf_path, page_count - Export to CSV for downstream processing\n\n\n3.2.3 Location Extraction (Script: 03_extract_locations.R)\nStep 1: Text Extraction - Use pdftools::pdf_text() to extract full text from each PDF - Concatenate all pages into single string\nStep 2: Fuzzy String Matching - Split extracted text into words - For each street in gazetteer, compute Levenshtein distance to text words - Threshold: distance ≤ 0.2 (80% similarity match) - Captures variations: “Maximilianstr.” → “Maximilianstraße”\nStep 3: Match Quality Assessment - Calculate match score: 1 - (distance / street_name_length) - Retain only matches with score ≥ 0.8 - Log all matches with metadata\nStep 4: Output - CSV: paper_id, paper_title, paper_date, street_name, latitude, longitude, match_score, pdf_url\n\n\n3.2.4 Visualization (Script: 04_visualize.R)\nStep 1: Map Creation - Use Leaflet JS library (via R htmlwidgets) - Base layer: OpenStreetMap + CartoDB Dark/Light options - Center: Median of all extracted coordinates\nStep 2: Markers and Clusters - Circle markers for each location match - Size: Fixed 8px radius - Color: Red (#f44336) with 0.7 opacity - Clustering: Markercluster plugin (maxClusterRadius=50)\nStep 3: Popups - Interactive popups with: - Street name - Paper title (truncated to 100 chars) - Paper date - Match score (85-100%) - Clickable link to PDF\nStep 4: Output - HTML file: figures/interactive_map.html - Self-contained or with assets folder (depending on pandoc availability) - Browser-compatible: all modern browsers supported"
   },
   {
-    "objectID": "publication.html#gazetteer-statistics",
-    "href": "publication.html#gazetteer-statistics",
+    "objectID": "index.html#gazetteer-statistics",
+    "href": "index.html#gazetteer-statistics",
     "title": "Spatial Distribution of Council Decisions",
     "section": "4.1 Gazetteer Statistics",
     "text": "4.1 Gazetteer Statistics\n\n\nCode\n# Example output from 01_gazetteer.R\n# ✓ Gefunden: 12,641 Straßensegmente\n# ✓ Verarbeitet: 3,120 eindeutige Straßen\n# Preview (first 5 streets):\n#   street_name            latitude  longitude\n# 1 Aachener Straße       48.3521  10.8951\n# 2 Ackermann Straße      48.3634  10.8723\n# 3 Äussere Uferstraße    48.3701  10.8845\n# 4 Agnesstraße           48.3578  10.9034\n# 5 Agneswalder Straße    48.3612  10.8876\n\n\nFindings: - 3,120 unique street names across Augsburg - Average 4.0 segments per street (12,641 / 3,120) - Geographic coverage: entire city area"
   },
   {
-    "objectID": "publication.html#pdf-download-results",
-    "href": "publication.html#pdf-download-results",
+    "objectID": "index.html#pdf-download-results",
+    "href": "index.html#pdf-download-results",
     "title": "Spatial Distribution of Council Decisions",
     "section": "4.2 PDF Download Results",
     "text": "4.2 PDF Download Results\n\n\nCode\n# Example output from 02_fetch_papers.R\n# ✓ Heruntergeladen: 8 PDFs\n# → Übersprungen: 2\n# Durchschnittliche Seitenzahl: 2.1\n\n\nQuality Control: - Filter threshold: 10 pages maximum - Skipped papers: 41-page development plan (too large) - Downloaded papers: 1-3 pages (typical council papers)"
   },
   {
-    "objectID": "publication.html#location-extraction-results",
-    "href": "publication.html#location-extraction-results",
+    "objectID": "index.html#location-extraction-results",
+    "href": "index.html#location-extraction-results",
     "title": "Spatial Distribution of Council Decisions",
     "section": "4.3 Location Extraction Results",
     "text": "4.3 Location Extraction Results\n\n\nCode\n# Example output from 03_extract_locations.R\n# Papers processed: 8\n# Locations found: 12\n# Unique streets mentioned: 8\n# Average match score: 0.92\n\n\nMatch Examples: - “Fuggerstraße” in paper title + document → 100% match - “Maximilianstr.” in text → fuzzy match to “Maximilianstraße” (0.88) - False positives prevented by threshold (e.g., “Straße” alone rejected). False positives are text passages that would be incorrectly recognised as street names (e.g. the general word ‘street’ or poorly matching spelling variants). They are filtered in 03_extract_locations.r using the fuzzy matching score: Levenshtein distance → match_score = 1 - distance / nchar(street_name). Only matches with a score ≥ threshold value (currently ~0.85 in the script; and also later on, could be a second filter for ≥0.85 on the map) are accepted. Anything below this is discarded and does not appear in data/extracted_locations.csv or on the map."
   },
   {
-    "objectID": "publication.html#interactive-map",
-    "href": "publication.html#interactive-map",
+    "objectID": "index.html#interactive-map",
+    "href": "index.html#interactive-map",
     "title": "Spatial Distribution of Council Decisions",
     "section": "4.4 Interactive Map",
-    "text": "4.4 Interactive Map\n\n\nCode\n# Lade die extrahierten Locations\nif (file.exists(\"../data/extracted_locations.csv\")) {\n  locations &lt;- read.csv(\"../data/extracted_locations.csv\",\n                        stringsAsFactors = FALSE,\n                        fileEncoding = \"UTF-8\")\n\n  # Filter: Nur Matches ≥ 85%\n  min_match_score &lt;- 0.85\n  locations_filtered &lt;- locations[locations$match_score &gt;= min_match_score, ]\n\n  if (nrow(locations_filtered) &gt; 0) {\n    # Center berechnen\n    center_lat &lt;- median(locations_filtered$latitude, na.rm = TRUE)\n    center_lon &lt;- median(locations_filtered$longitude, na.rm = TRUE)\n\n    # Popup erstellen\n    locations_filtered &lt;- locations_filtered %&gt;%\n      mutate(\n        popup_text = sprintf(\n          \"&lt;div style='font-family: Arial, sans-serif; max-width: 300px;'&gt;\n            &lt;h4 style='margin: 0 0 10px 0; color: #d32f2f;'&gt;%s&lt;/h4&gt;\n            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Paper:&lt;/strong&gt;&lt;br&gt;%s&lt;/p&gt;\n            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Datum:&lt;/strong&gt; %s&lt;/p&gt;\n            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Match:&lt;/strong&gt; %.0f%%&lt;/p&gt;\n            &lt;a href='%s' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'&gt;\n              📄 PDF öffnen\n            &lt;/a&gt;\n          &lt;/div&gt;\",\n          street_name,\n          substr(paper_title, 1, 100),\n          ifelse(is.na(paper_date), \"k.A.\", paper_date),\n          match_score * 100,\n          pdf_url\n        )\n      )\n\n    # Leaflet Karte\n    leaflet(locations_filtered) %&gt;%\n      addTiles(group = \"OpenStreetMap\") %&gt;%\n      addProviderTiles(providers$CartoDB.Positron, group = \"Hell\") %&gt;%\n      addProviderTiles(providers$CartoDB.DarkMatter, group = \"Dunkel\") %&gt;%\n      setView(lng = center_lon, lat = center_lat, zoom = 13) %&gt;%\n      addCircleMarkers(\n        lng = ~longitude,\n        lat = ~latitude,\n        popup = ~popup_text,\n        radius = 8,\n        color = \"#d32f2f\",\n        fillColor = \"#f44336\",\n        fillOpacity = 0.7,\n        stroke = TRUE,\n        weight = 2,\n        clusterOptions = markerClusterOptions(\n          maxClusterRadius = 50,\n          spiderfyOnMaxZoom = TRUE\n        )\n      ) %&gt;%\n      addLayersControl(\n        baseGroups = c(\"OpenStreetMap\", \"Hell\", \"Dunkel\"),\n        options = layersControlOptions(collapsed = FALSE)\n      ) %&gt;%\n      addControl(\n        html = sprintf(\n          \"&lt;div style='background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);'&gt;\n            &lt;h3 style='margin: 0 0 5px 0;'&gt;Augsburg - Policy Focus Areas&lt;/h3&gt;\n            &lt;p style='margin: 0; font-size: 14px;'&gt;%d Locations aus %d Papers&lt;br&gt;(Match ≥ 85%%)&lt;/p&gt;\n          &lt;/div&gt;\",\n          nrow(locations_filtered),\n          length(unique(locations_filtered$paper_id))\n        ),\n        position = \"topright\"\n      )\n  } else {\n    cat(\"**Hinweis**: Keine Locations mit ≥85% Match gefunden. Bitte 03_extract_locations.R ausführen.\")\n  }\n} else {\n  cat(\"**Hinweis**: Locations-Datei nicht gefunden. Bitte 03_extract_locations.R ausführen.\")\n}\n\n\n\n\n\n\nKarteninteraktion: - Zoomen: Scroll oder +/- Buttons - Verschieben: Klick & Drag - Cluster: Klick auf Cluster zum Aufteilen - Layer: Wechsel zwischen OpenStreetMap, Hell, Dunkel - Popups: Klick auf Marker für Details und PDF-Link"
+    "text": "4.4 Interactive Map\n\n\nCode\n# Lade die extrahierten Locations\nif (file.exists(\"../data/extracted_locations.csv\")) {\n  locations &lt;- read.csv(\"../data/extracted_locations.csv\",\n                        stringsAsFactors = FALSE,\n                        fileEncoding = \"UTF-8\")\n\n  # Filter: Nur Matches ≥ 85%\n  min_match_score &lt;- 0.85\n  locations_filtered &lt;- locations[locations$match_score &gt;= min_match_score, ]\n\n  if (nrow(locations_filtered) &gt; 0) {\n    # Center berechnen\n    center_lat &lt;- median(locations_filtered$latitude, na.rm = TRUE)\n    center_lon &lt;- median(locations_filtered$longitude, na.rm = TRUE)\n\n    # Popup erstellen\n    locations_filtered &lt;- locations_filtered %&gt;%\n      mutate(\n        popup_text = sprintf(\n          \"&lt;div style='font-family: Arial, sans-serif; max-width: 300px;'&gt;\n            &lt;h4 style='margin: 0 0 10px 0; color: #d32f2f;'&gt;%s&lt;/h4&gt;\n            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Paper:&lt;/strong&gt;&lt;br&gt;%s&lt;/p&gt;\n            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Datum:&lt;/strong&gt; %s&lt;/p&gt;\n            &lt;p style='margin: 5px 0;'&gt;&lt;strong&gt;Match:&lt;/strong&gt; %.0f%%&lt;/p&gt;\n            &lt;a href='%s' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'&gt;\n              📄 PDF öffnen\n            &lt;/a&gt;\n          &lt;/div&gt;\",\n          street_name,\n          substr(paper_title, 1, 100),\n          ifelse(is.na(paper_date), \"k.A.\", paper_date),\n          match_score * 100,\n          pdf_url\n        )\n      )\n\n    # Leaflet Karte\n    leaflet(locations_filtered) %&gt;%\n      addTiles(group = \"OpenStreetMap\") %&gt;%\n      addProviderTiles(providers$CartoDB.Positron, group = \"Hell\") %&gt;%\n      addProviderTiles(providers$CartoDB.DarkMatter, group = \"Dunkel\") %&gt;%\n      setView(lng = center_lon, lat = center_lat, zoom = 13) %&gt;%\n      addCircleMarkers(\n        lng = ~longitude,\n        lat = ~latitude,\n        popup = ~popup_text,\n        radius = 8,\n        color = \"#d32f2f\",\n        fillColor = \"#f44336\",\n        fillOpacity = 0.7,\n        stroke = TRUE,\n        weight = 2,\n        clusterOptions = markerClusterOptions(\n          maxClusterRadius = 50,\n          spiderfyOnMaxZoom = TRUE\n        )\n      ) %&gt;%\n      addLayersControl(\n        baseGroups = c(\"OpenStreetMap\", \"Hell\", \"Dunkel\"),\n        options = layersControlOptions(collapsed = FALSE)\n      ) %&gt;%\n      addControl(\n        html = sprintf(\n          \"&lt;div style='background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);'&gt;\n            &lt;h3 style='margin: 0 0 5px 0;'&gt;Augsburg - Policy Focus Areas&lt;/h3&gt;\n            &lt;p style='margin: 0; font-size: 14px;'&gt;%d Locations aus %d Papers&lt;br&gt;(Match ≥ 85%%)&lt;/p&gt;\n          &lt;/div&gt;\",\n          nrow(locations_filtered),\n          length(unique(locations_filtered$paper_id))\n        ),\n        position = \"topright\"\n      )\n  } else {\n    cat(\"**Hinweis**: Keine Locations mit ≥85% Match gefunden. Bitte 03_extract_locations.R ausführen.\")\n  }\n} else {\n  cat(\"**Hinweis**: Locations-Datei nicht gefunden. Bitte 03_extract_locations.R ausführen.\")\n}\n\n\n**Hinweis**: Locations-Datei nicht gefunden. Bitte 03_extract_locations.R ausführen.\n\n\nKarteninteraktion: - Zoomen: Scroll oder +/- Buttons - Verschieben: Klick & Drag - Cluster: Klick auf Cluster zum Aufteilen - Layer: Wechsel zwischen OpenStreetMap, Hell, Dunkel - Popups: Klick auf Marker für Details und PDF-Link"
   },
   {
-    "objectID": "publication.html#methodology-strengths",
-    "href": "publication.html#methodology-strengths",
+    "objectID": "index.html#methodology-strengths",
+    "href": "index.html#methodology-strengths",
     "title": "Spatial Distribution of Council Decisions",
     "section": "5.1 Methodology Strengths",
     "text": "5.1 Methodology Strengths\n\nReproducibility: All steps documented and automated via scripts\nTransparency: Fuzzy matching parameters explicit and tunable\nData availability: OParl (partially) and OpenStreetMap are public, reusable for other cities\nScalability: Theoretically scalable for hundreds of papers"
   },
   {
-    "objectID": "publication.html#limitations",
-    "href": "publication.html#limitations",
+    "objectID": "index.html#limitations",
+    "href": "index.html#limitations",
     "title": "Spatial Distribution of Council Decisions",
     "section": "5.2 Limitations",
     "text": "5.2 Limitations\n\nPDF text quality: Scanned PDFs without OCR will fail (mitigation: OCR not yet implemented)\nFuzzy matching and Gazetteer: Misses location references. And adds irrelevant information. Better fine-tuning required.\nSize and clarity: This pilot uses only 8 papers; full analysis 100+ for statistical power come with compromises and considerations for the application. Adjustment of the layout, e.g. drop-down menu."
   },
   {
-    "objectID": "publication.html#interpretation",
-    "href": "publication.html#interpretation",
+    "objectID": "index.html#interpretation",
+    "href": "index.html#interpretation",
     "title": "Spatial Distribution of Council Decisions",
     "section": "5.3 Interpretation",
     "text": "5.3 Interpretation\nDue to the existing challenges, it is difficult to draw a final conclusion. Focusing on meta data together with scaling could be one option. However, thanks to technological advances, working with political data at the local level certainly holds potential for human geography, for example in fields such as urban development."
   },
   {
-    "objectID": "publication.html#future-work",
-    "href": "publication.html#future-work",
+    "objectID": "index.html#future-work",
+    "href": "index.html#future-work",
     "title": "Spatial Distribution of Council Decisions",
     "section": "5.4 Future Work",
     "text": "5.4 Future Work\nA few ideas and examples: Scale up: Process all 2,000+ available papers, Temporal analysis: Map locations over time (heatmaps, animations), OCR integration: Handle scanned PDFs, Network analysis: Connect related papers and locations, Comparative study: Replicate methodology in other German cities, Policy outcomes: Link council discussions to actual development outcomes and NLP enhancement: Use named entity recognition (NER) instead of fuzzy matching.\nI see the greatest potential in the connection with Linked Open Data, both for scientific purposes and for the benefit of citizens. Keywords here are RFG and GeoSPARQL."
   },
   {
-    "objectID": "publication.html#system-requirements",
-    "href": "publication.html#system-requirements",
+    "objectID": "index.html#system-requirements",
+    "href": "index.html#system-requirements",
     "title": "Spatial Distribution of Council Decisions",
     "section": "7.1 System Requirements",
     "text": "7.1 System Requirements\n\nR ≥ 4.0\nPackages: httr, jsonlite, dplyr, pdftools, yaml, leaflet, htmlwidgets, stringdist\nExternal tools: Pandoc (optional, for selfcontained HTML output)\nOS: macOS, Linux, Windows"
   },
   {
-    "objectID": "publication.html#configuration-config.yaml",
-    "href": "publication.html#configuration-config.yaml",
+    "objectID": "index.html#configuration-config.yaml",
+    "href": "index.html#configuration-config.yaml",
     "title": "Spatial Distribution of Council Decisions",
     "section": "7.2 Configuration (config.yaml)",
     "text": "7.2 Configuration (config.yaml)\n# City information\ncity: Augsburg\ncountry: Deutschland\n\n# Gazetteer settings\nmax_streets: 10000\n\n# OParl API\noparl_api: \"https://augsburg.de/oparl/v1.0\"\n\n# Paper download limits\nmax_papers: 10\nmax_pages_per_pdf: 10"
   },
   {
-    "objectID": "publication.html#running-the-pipeline",
-    "href": "publication.html#running-the-pipeline",
+    "objectID": "index.html#running-the-pipeline",
+    "href": "index.html#running-the-pipeline",
     "title": "Spatial Distribution of Council Decisions",
     "section": "7.3 Running the Pipeline",
     "text": "7.3 Running the Pipeline\n# Option 1: From RStudio (Open geomodelierung.Rproj first)\nsource(\"analysis/run_all.r\", encoding = \"UTF-8\")\n\n# Option 2: From terminal\nRscript analysis/run_all.r\n\n# Option 3: Individual scripts\nRscript R/01_gazetteer.r\nRscript R/02_fetch_papers.r\nRscript R/03_extract_locations.r\nRscript R/04_visualize.r"
   },
   {
-    "objectID": "publication.html#output-files",
-    "href": "publication.html#output-files",
+    "objectID": "index.html#output-files",
+    "href": "index.html#output-files",
     "title": "Spatial Distribution of Council Decisions",
     "section": "7.4 Output Files",
     "text": "7.4 Output Files\n\n\n\n\n\n\n\nFile\nDescription\n\n\n\n\ndata/gazetteer/streets.csv\nAugsburg street names with coordinates\n\n\ndata/pdfs/*.pdf\nDownloaded council papers\n\n\ndata/papers_metadata.csv\nPaper metadata and download info\n\n\ndata/extracted_locations.csv\nMatched locations with scores\n\n\nfigures/interactive_map.html\nFinal visualization"

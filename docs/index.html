@@ -83,6 +83,7 @@ div.csl-indent {
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
@@ -100,11 +101,11 @@ div.csl-indent {
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-f93c2b1f3f0577f377aefa4848a86a36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
+  "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
+  "panel-placement": "end",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
@@ -126,23 +127,6 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
-<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
-<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
-<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
-<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
-<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
-<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
-<script src="site_libs/leaflet-binding-2.2.2/leaflet.js"></script>
-<script src="site_libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
-<script src="site_libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
-<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.css" rel="stylesheet">
-<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.Default.css" rel="stylesheet">
-<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.js"></script>
-<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.freezable.js"></script>
-<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.layersupport.js"></script>
 
 
 <meta property="og:title" content="Spatial Distribution of Council Decisions">
@@ -153,11 +137,36 @@ div.csl-indent {
 <meta name="twitter:card" content="summary">
 </head>
 
-<body class="quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Spatial Distribution of Council Decisions</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -492,9 +501,8 @@ div.csl-indent {
 <span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"**Hinweis**: Locations-Datei nicht gefunden. Bitte 03_extract_locations.R ausführen."</span>)</span>
 <span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-f4335e4c9fef1b5cf1c9" style="width:100%;height:433px;"></div>
-<script type="application/json" data-for="htmlwidget-f4335e4c9fef1b5cf1c9">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,"OpenStreetMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["CartoDB.Positron",null,"Hell",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["CartoDB.DarkMatter",null,"Dunkel",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[48.3620464,48.3546375,48.3608804,48.3905676,48.3191865,48.3546375,48.3671323,48.3665915,48.3683403,48.3680176,48.3658423],[10.8639028,10.7856711,10.9490393,10.8778849,10.9029318,10.7856711,10.8984422,10.8944465,10.8982036,10.9186553,10.8886956],8,null,null,{"interactive":true,"className":"","stroke":true,"color":"#d32f2f","weight":2,"opacity":0.5,"fill":true,"fillColor":"#f44336","fillOpacity":0.7},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false,"maxClusterRadius":50},null,["<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Bürgermeister-Bohl-Straße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Rathausplatz<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Waxensteinstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Bürgermeister-Bunk-Straße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 88%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Wallensteinstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Verkehrsberuhigende Maßnahmen in der Waxensteinstraße in Hochzoll<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-10<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 88%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060342&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Rathausplatz<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Maximilianstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 94%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Königsplatz<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 91%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Maximilienstraße<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Prüfantrag: Maßnahmen zur Steigerung der Attraktivität der Innenstadt<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 88%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060410&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Glaspalast<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Anfrage Fraktion Bürgerliche Mitte: Vermeidung von Namensverwechslungen bei der geplanten Umbenennun<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060426&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>","<div style='font-family: Arial, sans-serif; max-width: 300px;'>\n            <h4 style='margin: 0 0 10px 0; color: #d32f2f;'>Hauptbahnhof<\/h4>\n            <p style='margin: 5px 0;'><strong>Paper:<\/strong><br>Antrag der SPD-Stadtratsfraktion vom 09.12.2025: Änderungsantrag zur Fortschreibung des Nahverkehrsp<\/p>\n            <p style='margin: 5px 0;'><strong>Datum:<\/strong> 2025-12-09<\/p>\n            <p style='margin: 5px 0;'><strong>Match:<\/strong> 100%<\/p>\n            <a href='https://www.augsburg.sitzung-online.de/public/doc?DOLFDNR=1060817&DOCTYP=130&OTYP=41&ANNOTS=1' target='_blank' style='display: inline-block; margin-top: 10px; padding: 5px 10px; background: #1976d2; color: white; text-decoration: none; border-radius: 3px;'>\n              📄 PDF öffnen\n            <\/a>\n          <\/div>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[["OpenStreetMap","Hell","Dunkel"],[],{"collapsed":false,"autoZIndex":true,"position":"topright"}]},{"method":"addControl","args":["<div style='background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);'>\n            <h3 style='margin: 0 0 5px 0;'>Augsburg - Policy Focus Areas<\/h3>\n            <p style='margin: 0; font-size: 14px;'>11 Locations aus 4 Papers<br>(Match ≥ 85%)<\/p>\n          <\/div>","topright",null,"info legend"]}],"setView":[[48.3658423,10.8944465],13,[]],"limits":{"lat":[48.3191865,48.3905676],"lng":[10.7856711,10.9490393]}},"evals":[],"jsHooks":[]}</script>
+<div class="cell-output cell-output-stdout">
+<pre><code>**Hinweis**: Locations-Datei nicht gefunden. Bitte 03_extract_locations.R ausführen.</code></pre>
 </div>
 </div>
 <p><strong>Karteninteraktion:</strong> - <strong>Zoomen</strong>: Scroll oder +/- Buttons - <strong>Verschieben</strong>: Klick &amp; Drag - <strong>Cluster</strong>: Klick auf Cluster zum Aufteilen - <strong>Layer</strong>: Wechsel zwischen OpenStreetMap, Hell, Dunkel - <strong>Popups</strong>: Klick auf Marker für Details und PDF-Link</p>
@@ -549,33 +557,33 @@ div.csl-indent {
 </section>
 <section id="configuration-config.yaml" class="level2">
 <h2 class="anchored" data-anchor-id="configuration-config.yaml">7.2 Configuration (config.yaml)</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># City information</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">city</span><span class="kw">:</span><span class="at"> Augsburg</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">country</span><span class="kw">:</span><span class="at"> Deutschland</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Gazetteer settings</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max_streets</span><span class="kw">:</span><span class="at"> </span><span class="dv">10000</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># OParl API</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">oparl_api</span><span class="kw">:</span><span class="at"> </span><span class="st">"https://augsburg.de/oparl/v1.0"</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Paper download limits</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">max_papers</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">max_pages_per_pdf</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># City information</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">city</span><span class="kw">:</span><span class="at"> Augsburg</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">country</span><span class="kw">:</span><span class="at"> Deutschland</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Gazetteer settings</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max_streets</span><span class="kw">:</span><span class="at"> </span><span class="dv">10000</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># OParl API</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">oparl_api</span><span class="kw">:</span><span class="at"> </span><span class="st">"https://augsburg.de/oparl/v1.0"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Paper download limits</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">max_papers</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">max_pages_per_pdf</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="running-the-pipeline" class="level2">
 <h2 class="anchored" data-anchor-id="running-the-pipeline">7.3 Running the Pipeline</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 1: From RStudio (Open geomodelierung.Rproj first)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span><span class="er">(</span><span class="st">"analysis/run_all.r"</span><span class="ex">,</span> encoding = <span class="st">"UTF-8"</span><span class="kw">)</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 2: From terminal</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> analysis/run_all.r</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 3: Individual scripts</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/01_gazetteer.r</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/02_fetch_papers.r</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/03_extract_locations.r</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/04_visualize.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 1: From RStudio (Open geomodelierung.Rproj first)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span><span class="er">(</span><span class="st">"analysis/run_all.r"</span><span class="ex">,</span> encoding = <span class="st">"UTF-8"</span><span class="kw">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 2: From terminal</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> analysis/run_all.r</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 3: Individual scripts</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/01_gazetteer.r</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/02_fetch_papers.r</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/03_extract_locations.r</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> R/04_visualize.r</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="output-files" class="level2">
 <h2 class="anchored" data-anchor-id="output-files">7.4 Output Files</h2>
@@ -709,7 +717,7 @@ Birghan, Fabian, Robert Hettenhausen, Christine Meschede, and Tobias Siebenlist.
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/benneloui\.github\.io\/Spatial_Distribution_of_Council_Decisions\/");
+        var filterRegex = new RegExp("https:\/\/benneloui\.github\.io\/Spatial_Distribution_of_Council_Decisions\/index\.html");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
