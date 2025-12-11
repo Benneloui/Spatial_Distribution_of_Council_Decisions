@@ -18,8 +18,6 @@ outputs/
 *_cache/
 *_files/
 
-
-
 # OS-specific
 .DS_Store
 Thumbs.db
